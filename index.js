@@ -49,8 +49,29 @@ const channelParse = (chanArr)=>{
     return e.id
   })
 }
+
+
+function getAllMessages() {
+  const param = {
+    channel: 'C4JUEB796',
+    count: 200
+  };
+  let messages = [];
+  function pageLoaded(res) {
+    messages = messages.concat(res.messages);
+    if ( res.has_more && res.has_more !== false) {
+      param.latest = res.messages[res.messages.length - 1].ts;
+      return web.channels.history(param).then(pageLoaded);
+    }
+    return messages;
+  }
+  return web.channels.history(param).then(pageLoaded);
+}
 // getAllChannels()
 //   .then((val)=>console.log(channelParse(val)))  // prints out the list of channels
 //   .catch(console.error);
 
 
+// getAllMessages()
+//   .then((val)=>console.log(val.length))  // prints out the list of channels
+//   .catch(console.error);
