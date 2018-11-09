@@ -128,7 +128,7 @@ const dbFill = async () => {
       console.log(err);
     }
   }
-  console.log(d);
+  console.log('done all');
   return;
 };
 // let test = async()=>{
