@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "migrate": "knex init"
+    "migrate": "knex migrate:latest",
+    "knexseed": "knex seed:run"
+
   },
   "repository": {
     "type": "git",
@@ -24,5 +26,12 @@
     "dotenv": "^6.1.0",
     "knex": "^0.15.2",
     "sqlite3": "^4.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
   }
 }
