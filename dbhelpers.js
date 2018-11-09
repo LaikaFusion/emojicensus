@@ -14,7 +14,7 @@ module.exports = {
   insertMessage: (userID, messageText, reactionsArr) => {
     return db("messages").insert({
       user: userID,
-      text: messageText,
+      message: messageText,
       reactions: reactionsArr
     });
   },

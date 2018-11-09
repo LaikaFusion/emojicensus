@@ -14,16 +14,18 @@ web.on("rate_limited", retryAfter => {
 
 //returns a json with all the custom emoji on the channel
 const emojiList = async () => {
-  web.emoji
-    .list()
-    .then(res => {
-      Object.keys(res.emoji).forEach(element => {
+  web.emoji.list()
+    .then(async res => {
+      for (const element of Object.keys(res.emoji)) {
         try {
-          dbHelpers.insertEmoji(element, res.emoj[element]);
-          return true;
+          await  dbHelpers.insertEmoji(element, res.emoji[element]);
         } catch (err) {
           console.log(err);
         }
+        
+      }
+      Object.keys(res.emoji).forEach(element => {
+        
       });
     })
     .catch(console.error);
@@ -79,20 +81,23 @@ function getAllMessagesForSingleChannel(channelID) {
 }
 
 const messagesToDB = async messagesArr => {
-
-  messagesArr.forEach(e=>{
-    try{
-      if(typeof e.reactions !== 'undefined'){
-        e.reactions = [];
+  for (let index = 0; index < messagesArr.length; index++) {
+    let e = messagesArr[index];
+    if (e.subtype !== "bot_message") {
+      try {
+        if (typeof e.reactions === "undefined") {
+          e.reactions = [];
+        }
+        await dbHelpers.insertMessage(
+          e.user,
+          e.text,
+          JSON.stringify(e.reactions)
+        );
+      } catch (err) {
+        console.log(err);
       }
-      dbHelpers.insertMessage(e.user,e.text, JSON.stringify(e.reactions));
     }
-    catch(err){
-      console.log(err);
-    }
-  })
-
-
+  }
 };
 // getAllChannels()
 //   .then((val)=>console.log(channelParse(val)))  // prints out the list of channels
@@ -102,44 +107,45 @@ const messagesToDB = async messagesArr => {
 //   .then((val)=>console.log(val))  // prints out the list of channels
 //   .catch(console.error);
 
-const dbFill = async()=>{
+const dbFill = async () => {
   let channelList;
-  // try{
-  //   await emojiList();
-  // }
-  // catch(err){
-  //   console.log(err);
-  // }
-  // try{
-  //   channelList = await getAllChannels();
-  // }
-  // catch(err){
-  //   console.log(err);
-  // }
-  // channelList = channelParse(channelList); 
-
-  // channelList.forEach(e=>{
-    try{
-      let chanMessages= await getAllMessagesForSingleChannel('C6UDG2D4Z');
-      messagesToDB(chanMessages);
-    }
-    catch(err){
-      console.log(err);
-    }
-  // })
-}
-let test = async()=>{
-  try{
-    let results =  await dbHelpers.readAll()
-    return results;
-
-  }
-  catch(err){
+  try {
+    await emojiList();
+  } catch (err) {
     console.log(err);
   }
+  try {
+    channelList = await getAllChannels();
+  } catch (err) {
+    console.log(err);
   }
-  test().then(
-    (results)=>{
-      console.log(results);
+  channelList = channelParse(channelList);
+
+  for (let index = 0; index < channelList.length; index++) {
+    try {
+      let chanMessages = await getAllMessagesForSingleChannel(channelList[index]);
+      await messagesToDB(chanMessages);
+      console.log(`${channelList[index]} done`);
+    } catch (err) {
+      console.log(err);
     }
-  );
+  }
+  console.log(d);
+  return;
+};
+// let test = async()=>{
+//   try{
+//     let results =  await dbHelpers.readAll()
+//     return results;
+
+//   }
+//   catch(err){
+//     console.log(err);
+//   }
+//   }
+//   test().then(
+//     (results)=>{
+//       console.log(results);
+//     }
+//   );
+dbFill();
