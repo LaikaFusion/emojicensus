@@ -7,24 +7,15 @@ module.exports = {
     connection: {
       filename: './storage.sqlite3'
     },
+    seeds: {
+      directory: "./seeds"
+    },
+    migrations: {
+      tableName: "knex_migrations",
+      directory: "./migrations"
+    },
     useNullAsDefault: true
 
   },
-  //to do fix this
-  production: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
-  }
 
 };

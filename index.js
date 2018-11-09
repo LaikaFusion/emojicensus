@@ -20,6 +20,7 @@ const emojiList = async () => {
       Object.keys(res.emoji).forEach(element => {
         try {
           dbHelpers.insertEmoji(element, res.emoj[element]);
+          return true;
         } catch (err) {
           console.log(err);
         }
@@ -80,10 +81,15 @@ function getAllMessagesForSingleChannel(channelID) {
 const messagesToDB = async messagesArr => {
 
   messagesArr.forEach(e=>{
-    if(typeof e.reactions !== 'undefined'){
-      e.reactions = [];
+    try{
+      if(typeof e.reactions !== 'undefined'){
+        e.reactions = [];
+      }
+      dbHelpers.insertMessage(e.user,e.text, JSON.stringify(e.reactions));
     }
-    dbHelpers.insertMessage(e.user,e.text, JSON.stringify(e.reactions));
+    catch(err){
+      console.log(err);
+    }
   })
 
 
@@ -95,3 +101,45 @@ const messagesToDB = async messagesArr => {
 // getAllMessages('C8771SARM')
 //   .then((val)=>console.log(val))  // prints out the list of channels
 //   .catch(console.error);
+
+const dbFill = async()=>{
+  let channelList;
+  // try{
+  //   await emojiList();
+  // }
+  // catch(err){
+  //   console.log(err);
+  // }
+  // try{
+  //   channelList = await getAllChannels();
+  // }
+  // catch(err){
+  //   console.log(err);
+  // }
+  // channelList = channelParse(channelList); 
+
+  // channelList.forEach(e=>{
+    try{
+      let chanMessages= await getAllMessagesForSingleChannel('C6UDG2D4Z');
+      messagesToDB(chanMessages);
+    }
+    catch(err){
+      console.log(err);
+    }
+  // })
+}
+let test = async()=>{
+  try{
+    let results =  await dbHelpers.readAll()
+    return results;
+
+  }
+  catch(err){
+    console.log(err);
+  }
+  }
+  test().then(
+    (results)=>{
+      console.log(results);
+    }
+  );

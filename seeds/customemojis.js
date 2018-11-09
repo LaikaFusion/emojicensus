@@ -1,15 +1,15 @@
-const emojislist = require('../slackdefaultemojis.js');
+const emojislist = require("../slackdefaultemojis.js");
 const dbHelpers = require("../dbhelpers");
-
-
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('emojis').del()
-    .then(function () {
+  return knex("emojis")
+    .del()
+    .then(async function() {
       // Inserts seed entries
-      Object.keys(emojislist).forEach(element => {
-        dbHelpers.insertEmoji(element,emojislist[element])
-      });
+      for (const element of Object.keys(emojislist)) {
+        await dbHelpers.insertEmoji(element, emojislist[element]);
+      }
+      console.log(`Seed done`);
     });
 };
