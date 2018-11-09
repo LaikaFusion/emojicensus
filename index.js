@@ -65,9 +65,7 @@ const channelParse = chanArr => {
 
 function getAllMessagesForSingleChannel(channelID) {
   const param = {
-    channel: channelID,
-    count: 200
-  };
+    channel: channelID  };
   let messages = [];
   function pageLoaded(res) {
     messages = messages.concat(res.messages);
@@ -83,7 +81,7 @@ function getAllMessagesForSingleChannel(channelID) {
 const messagesToDB = async messagesArr => {
   for (let index = 0; index < messagesArr.length; index++) {
     let e = messagesArr[index];
-    if (e.subtype !== "bot_message") {
+    if (typeof e.subtype === "undefined" ) {
       try {
         if (typeof e.reactions === "undefined") {
           e.reactions = [];
