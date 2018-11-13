@@ -1,7 +1,7 @@
 const fs = require('fs');
 const dbHelpers = require('./dbhelpers');
 
-const test = async () => {
+const count = async () => {
   const results = {};
   const notfound = [];
   const emojilist = await dbHelpers.readAllEmojis();
@@ -50,19 +50,20 @@ const test = async () => {
     if (index === Math.round(rowTotal[0]['count(`id`)'] / 2)) {
       console.log('50%');
     }
-    if (Math.round(index === (rowTotal[0]['count(`id`)'] / 4) * 3)) {
+    if (index === Math.round((rowTotal[0]['count(`id`)'] / 4) * 3)) {
       console.log('75%');
     }
   }
+  console.log(notfound);
   return results;
 };
-test().then((val) => {
-  fs.writeFileSync('results.json', JSON.stringify(val), 'utf8', (err) => {
+count().then((val) => {
+  fs.writeFileSync('results.json', `module.exports = ${JSON.stringify(val)}`, 'utf8', (err) => {
     // throws an error, you could also catch it here
     if (err) console.log(err);
 
     // success case, the file was saved
     console.log('Results saved!');
+    process.exit();
   });
-  process.exit();
 });

@@ -1,7 +1,7 @@
 const { WebClient } = require('@slack/client');
 require('dotenv').config();
 const emojislist = require('../slackdefaultemojis.js');
-const dbHelpers = require('../dbhelpers');
+const dbHelpers = require('../dbhelpers.js');
 
 const token = process.env.SLACK_TOKEN;
 const web = new WebClient(token);

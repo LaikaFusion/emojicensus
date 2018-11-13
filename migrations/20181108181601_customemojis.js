@@ -6,6 +6,8 @@ exports.up = function (knex, Promise) {
       .notNullable()
       .unique();
     table.text('location').notNullable();
+    table.integer('uses');
+    table.string('topuser');
   });
 };
 
